@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Happy Birthday, Nkosinathi! 🎂🎈</title>
+  <meta name="description" content="A birthday wish page for Nkosinathi." />
+  <meta name="theme-color" content="#ff4d4d" />
+  <style>
+    :root{
+      --bg: #0b0b11;
+      --panel: rgba(255,255,255,.07);
+      --text: #ffffff;
+      --muted:#c9c9d1;
+      --accent:#ff4d4d; /* red */
+      --accent2:#ff7676; /* lighter red */
+      --radius:18px;
+      --glass-blur: 10px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial;
+      background:
+        radial-gradient(1200px 700px at 15% -5%, #30121a 0%, transparent 60%),
+        radial-gradient(1000px 600px at 110% 5%, #361010 0%, transparent 60%),
+        linear-gradient(#0b0b11, #0d0d14);
+      overflow-x:hidden;
+    }
+    a{color:inherit}
+    .wrap{max-width:1040px; margin:0 auto; padding:28px 16px}
+
+    /* Hero */
+    header.hero{padding:72px 14px 28px; text-align:center}
+    .badge{
+      display:inline-block; padding:8px 14px; letter-spacing:.08em; text-transform:uppercase;
+      color:var(--muted); border:1px solid var(--panel); border-radius:999px;
+      background:var(--panel); backdrop-filter: blur(var(--glass-blur));
+    }
+    h1.title{
+      margin:18px auto 10px; line-height:1.05;
+      font-size: clamp(40px, 7vw, 80px);
+      background: linear-gradient(90deg, #fff, var(--accent), var(--accent2));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .subtitle{color:var(--muted); font-size:clamp(16px, 2.5vw, 20px); max-width:900px; margin:0 auto}
+
+    /* CTA */
+    .cta-row{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:20px}
+    .btn{
+      border:none; cursor:pointer; padding:12px 18px; border-radius:999px; font-weight:700;
+      background:linear-gradient(90deg, var(--accent2), var(--accent)); color:#0b0911;
+      transition: transform .15s ease; box-shadow: 0 8px 24px rgba(255,77,77,.25);
+    }
+    .btn:hover{transform:translateY(-2px)}
+    .btn.ghost{background:transparent; color:var(--text); border:1px solid var(--panel); backdrop-filter: blur(var(--glass-blur))}
+
+    /* Cards */
+    .cards{display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:12px; margin-top:28px}
+    .card{background:var(--panel); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); text-align:center; padding:16px; backdrop-filter: blur(var(--glass-blur))}
+    .card .num{font-size: clamp(28px, 5vw, 44px); font-weight:800}
+    .card .lbl{color:var(--muted); font-size:12px; letter-spacing:.08em; text-transform:uppercase}
+
+    /* Message */
+    section{padding:36px 0}
+    .section-title{text-align:center; font-size: clamp(22px, 3.2vw, 30px); margin:0 0 14px}
+    .note{max-width:900px; margin:0 auto; background:var(--panel); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); padding:20px; line-height:1.65; backdrop-filter: blur(var(--glass-blur))}
+
+    /* Gallery */
+    .gallery{max-width:1040px; margin: 8px auto 0; display:grid; gap:10px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr))}
+    .gallery img{width:100%; height:200px; object-fit:cover; border-radius:14px; background:#15151b; border:1px solid rgba(255,255,255,.06); transition:transform .15s ease}
+    .gallery img:hover{transform: translateY(-2px)}
+
+    /* Confetti canvas */
+    #confetti{position:fixed; inset:0; pointer-events:none; z-index:999}
+
+    /* Balloons */
+    .balloon{
+      position:fixed; bottom:-150px; width:40px; height:60px;
+      background: radial-gradient(circle at 50% 35%, #ff9999, #ff4d4d);
+      border-radius:50% 50% 50% 50%;
+      animation: floatUp linear forwards;
+      pointer-events:none; z-index:1;
+    }
+    .balloon::after{
+      content:""; position:absolute; left:50%; top:100%; width:2px; height:40px; background:#aaa; transform:translateX(-50%);
+    }
+    @keyframes floatUp{
+      to{transform: translateY(-120vh); opacity:0}
+    }
+
+    /* Footer */
+    footer{padding:24px 0 40px; text-align:center; color:var(--muted)}
+  </style>
+</head>
+<body>
+
+  <canvas id="confetti"></canvas>
+
+  <header class="hero">
+    <span class="badge">Birthday • <span id="dateLabel">Aug 24</span></span>
+    <h1 class="title">Happy Birthday, <span id="who">Nkosinathi</span>! 🎂🎈</h1>
+    <p class="subtitle" id="tagline">Celebrating you today with love, laughter, and joy.</p>
+
+    <div class="cta-row">
+      <button class="btn" id="celebrateBtn">Celebrate Now 🎊</button>
+      <a class="btn ghost" href="#message">Open Your Wish 💌</a>
+      <a class="btn" href="https://www.youtube.com/watch?v=vk_xq1P7vIU" target="_blank">Play Our Song 🎵</a>
+    </div>
+
+    <div class="cards" aria-label="Countdown to birthday">
+      <div class="card"><div class="num" id="cd-days">0</div><div class="lbl">Days</div></div>
+      <div class="card"><div class="num" id="cd-hours">00</div><div class="lbl">Hours</div></div>
+      <div class="card"><div class="num" id="cd-mins">00</div><div class="lbl">Minutes</div></div>
+      <div class="card"><div class="num" id="cd-secs">00</div><div class="lbl">Seconds</div></div>
+    </div>
+  </header>
+
+  <section id="message">
+    <h2 class="section-title">A special note 💖</h2>
+    <div class="note">
+      Oi oi meu amor, my skat, my 3in1 given by the Holy 3in1!<br><br>
+      Look at me forcing you to celebrate yourself for a change...the same way you make sure that I giggle like a fool in love every Nov the 12th.<br><br>
+      Ek is lief vir jou with every breath I take. You're my fifty shades and more. I love the sensitive baby in you...the dedicated priesthood holder that fears God. Eu tambèm amo the you that crashes and cry "baby I'm tired it's too much", even the filthy hustler in you that refuses to bath sometimes is mine and I love every part of it.<br><br>
+      You still remember ndikfundis' ukshela saying "Just say I love you Naledi" hahaha, I didn't think it would be a compass to this amazing city of love, laughter and peace that we live in. You're my home, my safe space and I'm so grateful for you.<br><br>
+      Torna-se audaz e sabio. You're a beautiful soul...Feliz anivesario papi. Breathe and live! I love you; Always and eternally! 💗
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Our Memories 📸</h2>
+    <div class="gallery">
+      <img src="assets/pic1.jpg" alt="Memory 1">
+      <img src="assets/pic2.jpg" alt="Memory 2">
+      <img src="assets/pic3.jpg" alt="Memory 3">
+      <img src="assets/pic4.jpg" alt="Memory 4">
+      <img src="assets/pic5.jpg" alt="Memory 5">
+      <img src="assets/pic6.jpg" alt="Memory 6">
+    </div>
+  </section>
+
+  <footer>
+    Made with ❤️ for Nkosinathi — Happy Birthday!
+  </footer>
+
+  <script>
+    const targetDate = new Date("2025-08-24T00:00:00");
+
+    // Fill date
+    document.getElementById('dateLabel').textContent = targetDate.toLocaleDateString(undefined, {month:'short', day:'numeric'});
+
+    // Countdown
+    const els = {
+      d: document.getElementById('cd-days'),
+      h: document.getElementById('cd-hours'),
+      m: document.getElementById('cd-mins'),
+      s: document.getElementById('cd-secs'),
+    };
+    function tick(){
+      const now = new Date();
+      let diff = targetDate - now;
+      if(diff < 0) diff = 0;
+      const s = Math.floor(diff/1000)%60;
+      const m = Math.floor(diff/1000/60)%60;
+      const h = Math.floor(diff/1000/60/60)%24;
+      const d = Math.floor(diff/1000/60/60/24);
+      els.d.textContent = d;
+      els.h.textContent = h.toString().padStart(2,'0');
+      els.m.textContent = m.toString().padStart(2,'0');
+      els.s.textContent = s.toString().padStart(2,'0');
+    }
+    tick();
+    setInterval(tick, 1000);
+
+    // Confetti
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    let W=0,H=0, parts=[];
+    function resize(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+    addEventListener('resize', resize); resize();
+    function addConfetti(n=180){
+      for(let i=0;i<n;i++) parts.push({x:Math.random()*W, y:-10, r:3+Math.random()*5, c:`hsl(${Math.random()*360},90%,60%)`, v:1+Math.random()*3, a:Math.random()*Math.PI});
+    }
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      parts.forEach(p=>{ p.a+=0.05; p.y+=p.v; p.x+=Math.sin(p.a); ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill(); });
+      parts = parts.filter(p=>p.y<H+12);
+      requestAnimationFrame(draw);
+    }
+    draw();
+
+    // Balloons
+    function spawnBalloon(){
+      const el = document.createElement('div');
+      el.className = 'balloon';
+      const size = 30 + Math.random()*30;
+      el.style.width = size+'px'; el.style.height = (size*1.5)+'px';
+      el.style.left = Math.random()*100 + 'vw';
+      el.style.animationDuration = (8 + Math.random()*6)+'s';
+      document.body.appendChild(el);
+      setTimeout(()=> el.remove(), 14000);
+    }
+    setInterval(spawnBalloon, 800);
+
+    // Celebrate button
+    document.getElementById('celebrateBtn').addEventListener('click', ()=>{
+      addConfetti(220);
+      setTimeout(()=>addConfetti(160), 250);
+      setTimeout(()=>addConfetti(160), 500);
+      document.getElementById('message').scrollIntoView({behavior:'smooth'});
+    });
+  </script>
+</body>
+</html>
